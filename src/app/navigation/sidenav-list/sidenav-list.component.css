@@ -1,8 +1,17 @@
 a {
   text-decoration: none;
-  color: white;
+  color: white;  
 }
 
 a:hover, a:active {
   color: #ccc;
+}
+
+.nav-caption {
+  display: inline-block;
+  padding-left: 6px;
+}
+
+.mat-list-item {
+  font-size: .9rem;
 }
