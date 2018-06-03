@@ -1,0 +1,14 @@
+<mat-nav-list>
+    <a *ngFor="let menu of menus" 
+      mat-list-item routerLink="{{menu.router}}"
+      (click)="onClose()">
+      <mat-icon>{{menu.icon}}</mat-icon>
+      <span class="nav-caption">{{menu.name}}</span>
+    </a>
+    <mat-list-item>
+        <button mat-icon-button (click)="onClose()">
+            <mat-icon>keyboard_tab</mat-icon>
+            <span class="nav-caption">Logout</span>
+          </button>
+    </mat-list-item>
+</mat-nav-list>
