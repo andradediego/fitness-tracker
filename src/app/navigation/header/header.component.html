@@ -18,10 +18,10 @@
             <span class="nav-caption">{{menu.name}}</span>
           </a>
         </li>
-        <li>
+        <li *ngIf="isAuth">
             <a>
               <mat-icon>keyboard_tab</mat-icon>
-              <span class="nav-caption">Logout</span>
+              <span class="btn-logout nav-caption" (click)="onLogout()">Logout</span>
             </a>
         </li>
       </ul>

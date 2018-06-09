@@ -1,13 +1,11 @@
 <mat-sidenav-container>
   <mat-sidenav #sidenav role="navigation">
       <app-sidenav-list 
-        [menus]="menus" 
         (closeSidenav)="sidenav.close()">
       </app-sidenav-list>
   </mat-sidenav>
   <mat-sidenav-content>
     <app-header 
-      [menus]="menus" 
       (sidenavToggle)="sidenav.toggle()">
     </app-header>
     <main>

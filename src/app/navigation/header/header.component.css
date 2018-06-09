@@ -22,3 +22,7 @@ a:hover, a:active {
 mat-icon {
   vertical-align: middle;
 }
+
+.btn-logout {
+  cursor: pointer;
+}
