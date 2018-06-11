@@ -1,6 +1,8 @@
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { AngularFireModule } from 'angularfire2';
+import { AngularFirestoreModule } from 'angularfire2/firestore';
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
@@ -19,6 +21,8 @@ import { StopTrainingComponent } from './training/stop-training/stop-training.co
 
 import { AuthService } from './auth/auth.service';
 import { TrainingService } from './training/training.service.ts.service';
+import { firebaseCredentials } from './firebase-credentials';
+import { AngularFireAuthModule } from 'angularfire2/auth';
 
 @NgModule({
   declarations: [
@@ -40,7 +44,10 @@ import { TrainingService } from './training/training.service.ts.service';
     FlexLayoutModule,
     AppRoutingModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    AngularFireModule.initializeApp(firebaseCredentials),
+    AngularFirestoreModule,
+    AngularFireAuthModule
   ],
   providers: [
     AuthService,
