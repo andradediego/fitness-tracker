@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild, AfterViewInit, OnDestroy } from '@angular/core';
 
-import { TrainingService } from './../training.service.ts.service';
+import { TrainingService } from '../training.service';
 import { MatTableDataSource, MatSort, MatPaginator } from '@angular/material';
 import { IExercise } from './../iexercise.model';
 import { Subscription } from 'rxjs/Subscription';
@@ -45,7 +45,9 @@ OnDestroy {
   }
 
   ngOnDestroy() {
-    this.finishedExercisesSubscription.unsubscribe();
+    if (this.finishedExercisesSubscription) {
+      this.finishedExercisesSubscription.unsubscribe();
+    }
   }
 
   doFilter(filterValue: string) {

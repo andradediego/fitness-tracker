@@ -4,7 +4,7 @@ import {
 } from '@angular/core';
 import { MatDialog } from '@angular/material';
 import { StopTrainingComponent } from './../stop-training/stop-training.component';
-import { TrainingService } from '../training.service.ts.service';
+import { TrainingService } from '../training.service';
 
 @Component({
   selector: 'app-current-training',

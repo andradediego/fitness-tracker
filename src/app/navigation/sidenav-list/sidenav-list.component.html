@@ -6,9 +6,11 @@
       <span class="nav-caption">{{menu.name}}</span>
     </a>
     <mat-list-item *ngIf="isAuth">
-        <button mat-icon-button (click)="onLogout()">
+        <button type="button" 
+          mat-icon-button 
+          (click)="onLogout()" >
             <mat-icon>keyboard_tab</mat-icon>
             <span class="nav-caption">Logout</span>
-          </button>
+        </button>
     </mat-list-item>
 </mat-nav-list>
