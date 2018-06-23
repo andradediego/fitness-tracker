@@ -43,6 +43,21 @@ export function authReducer(
         ]
       };
     case SET_UNAUTHENTICATED:
+      return {
+        isAuthenticated: false,
+        menus: [
+          {
+            name: 'Signup',
+            icon: 'face',
+            router: '/signup'
+          },
+          {
+            name: 'Login',
+            icon: 'input',
+            router: '/login'
+          }
+        ]
+      };
     default:
       return state;
   }

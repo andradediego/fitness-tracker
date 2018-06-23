@@ -93,6 +93,7 @@ export class AuthService {
 
   logout(): void {
     this.afAuth.auth.signOut();
+    this.store.dispatch(new Auth.SetUnauthenticated());
   }
 
   getUser(): IUser {
