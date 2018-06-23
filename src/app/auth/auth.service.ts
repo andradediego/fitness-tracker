@@ -1,6 +1,7 @@
 import { IMenu } from './imenu.model';
 import { Injectable } from '@angular/core';
 import { AngularFireAuth } from 'angularfire2/auth';
+import { Store } from '@ngrx/store';
 
 import { IUser } from './iuser.model';
 import { IAuthData } from './iauth-data.model';
@@ -9,59 +10,33 @@ import { Router } from '@angular/router';
 
 import { UIService } from '../shared/ui.service';
 import { TrainingService } from '../training/training.service';
+import * as fromRoot from '../app.reducer';
+import * as UI from '../shared/ui.actions';
+import * as Auth from './auth.actions';
 
 @Injectable()
 export class AuthService {
   public authChange = new Subject<boolean>();
-  public displayMenu = new Subject<IMenu[]>();
-  private isAuthenticated = false;
   private  user: IUser;
-  private menus: IMenu[] = [
-    {
-      name: 'Signup',
-      icon: 'face',
-      router: '/signup',
-      auth: false
-    },
-    {
-      name: 'Login',
-      icon: 'input',
-      router: '/login',
-      auth: false
-    },
-    {
-      name: 'Training',
-      icon: 'fitness_center',
-      router: '/training',
-      auth: true
-    }
-  ];
 
   constructor (
     private router: Router,
     private afAuth: AngularFireAuth,
     private trainingService: TrainingService,
-    private uiService: UIService
+    private uiService: UIService,
+    private store: Store<fromRoot.IAppState>
   ) {}
-
-  firstAcess() {
-    this.displayMenu.next(this.updateMenu());
-  }
 
   initAuthListener() {
     this.afAuth.authState.subscribe(
       user => {
         if (user) {
           this.router.navigate(['/training']);
-          this.isAuthenticated = true;
-          this.displayMenu.next(this.updateMenu());
-          this.authChange.next(this.isAuthenticated);
+          this.store.dispatch(new Auth.SetAuthenticated());
         } else {
           this.user = null;
           this.router.navigate(['/login']);
-          this.isAuthenticated = false;
-          this.authChange.next(this.isAuthenticated);
-          this.displayMenu.next(this.updateMenu());
+          this.store.dispatch(new Auth.SetUnauthenticated());
           this.trainingService.cancelSubscriptions();
         }
       }
@@ -69,7 +44,7 @@ export class AuthService {
   }
 
   registerUser(authData: IAuthData): void {
-    this.uiService.loadingStateChanged.next(true);
+    this.store.dispatch(new UI.StartLoading());
     this.afAuth.auth.createUserWithEmailAndPassword(
       authData.email,
       authData.password
@@ -80,20 +55,20 @@ export class AuthService {
           email: result.user.email,
           userId: result.user.uid
         };
-        this.uiService.loadingStateChanged.next(false);
+        this.store.dispatch(new UI.StopLoading());
       }
     )
     .catch(
       error => {
         console.log(error);
         this.uiService.showSnackBar(error.message, null, 3000);
-        this.uiService.loadingStateChanged.next(false);
+        this.store.dispatch(new UI.StopLoading());
       }
     );
   }
 
   login(authData: IAuthData): void {
-    this.uiService.loadingStateChanged.next(true);
+    this.store.dispatch(new UI.StartLoading());
     this.afAuth.auth.signInWithEmailAndPassword(
       authData.email,
       authData.password
@@ -104,14 +79,14 @@ export class AuthService {
           email: result.user.email,
           userId: result.user.uid
         };
-        this.uiService.loadingStateChanged.next(false);
+        this.store.dispatch(new UI.StopLoading());
       }
     )
     .catch(
       error => {
         console.log(error);
         this.uiService.showSnackBar(error.message, null, 3000);
-        this.uiService.loadingStateChanged.next(false);
+        this.store.dispatch(new UI.StopLoading());
       }
     );
   }
@@ -122,18 +97,5 @@ export class AuthService {
 
   getUser(): IUser {
     return {...this.user };
-  }
-
-  isAuth(): boolean {
-    return this.isAuthenticated;
-  }
-
-  private updateMenu(): IMenu[] {
-    return this.menus.filter(
-      (element, index, array) => {
-        console.log(element.auth);
-        return element.auth === this.isAuthenticated;
-      }
-    );
   }
 }

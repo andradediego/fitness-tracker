@@ -1,55 +1,34 @@
 import { Component,
   OnInit,
   Output,
-  EventEmitter,
-  OnDestroy
+  EventEmitter
 } from '@angular/core';
 
+import { Observable } from 'rxjs';
 import { IMenu } from './../../auth/imenu.model';
 import { AuthService } from '../../auth/auth.service';
-import { Subscription } from 'rxjs/Subscription';
+
+import { Store } from '@ngrx/store';
+import * as fromRoot from '../../app.reducer';
 
 @Component({
   selector: 'app-sidenav-list',
   templateUrl: './sidenav-list.component.html',
   styleUrls: ['./sidenav-list.component.css']
 })
-export class SidenavListComponent implements OnInit, OnDestroy {
-  public isAuth = false;
-  public menus: IMenu[] = null;
-
-  public authSubscription: Subscription;
-  public menuSubscription: Subscription;
+export class SidenavListComponent implements OnInit {
+  public isAuth$: Observable<boolean>;
+  public menus$: Observable<IMenu[]>;
 
   @Output() closeSidenav = new EventEmitter<void>();
 
-  constructor(private authService: AuthService) { }
+  constructor(
+    private authService: AuthService,
+    private store: Store<fromRoot.IAppState>) { }
 
   ngOnInit() {
-    this.authSubscription = this.authService.authChange.subscribe(
-      (authStatus: boolean) => {
-        this.isAuth = authStatus;
-      }
-    );
-
-    this.menuSubscription = this.authService.displayMenu.subscribe(
-      (menus: IMenu[]) => {
-        this.menus = menus;
-      }
-    );
-
-    if (this.menus === null) {
-      this.authService.firstAcess();
-    }
-  }
-
-  ngOnDestroy() {
-    if (this.authSubscription) {
-      this.authSubscription.unsubscribe();
-    }
-    if (this.menuSubscription) {
-      this.menuSubscription.unsubscribe();
-    }
+    this.isAuth$ = this.store.select(fromRoot.getIsAuthenticated);
+    this.menus$ = this.store.select(fromRoot.getMenu);
   }
 
   onClose() {
@@ -57,7 +36,6 @@ export class SidenavListComponent implements OnInit, OnDestroy {
   }
 
   onLogout() {
-    // debugger;
     this.authService.logout();
     this.onClose();
   }

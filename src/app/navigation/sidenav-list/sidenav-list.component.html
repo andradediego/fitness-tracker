@@ -1,11 +1,11 @@
 <mat-nav-list>
-    <a *ngFor="let menu of menus" 
+    <a *ngFor="let menu of menus$ | async" 
       mat-list-item [routerLink]="menu.router"
       (click)="onClose()">
       <mat-icon>{{menu.icon}}</mat-icon>
       <span class="nav-caption">{{menu.name}}</span>
     </a>
-    <mat-list-item *ngIf="isAuth">
+    <mat-list-item *ngIf="(isAuth$ | async)">
         <button type="button" 
           mat-icon-button 
           (click)="onLogout()" >
